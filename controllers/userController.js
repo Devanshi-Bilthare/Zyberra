@@ -3,6 +3,7 @@ const UserModel = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto');
 const nodemailer = require('nodemailer')
+const bcrypt = require('bcrypt')
 
 const Register = asyncHandler(async (req,res)=>{
     try{
@@ -23,6 +24,23 @@ const Login = asyncHandler(async(req,res)=>{
             res.status(400)
             throw new Error('Please provide both email and password')
         }
+
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            res.status(401).json({ message: 'Invalid credentials' });
+            return;
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            res.status(401).json({ message: 'Invalid credentials' });
+            return;
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '3d' });
+
+        res.status(200).json({ user, token });
+
 
     }catch(err){
         res.status(500).json({ message: 'Login failed', error: err.message });

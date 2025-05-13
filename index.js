@@ -16,6 +16,7 @@ const { notFound, errorHandler } = require('./middlewares/errorHandler')
 const UserRouter  =require('./routes/userRoutes')
 const CategoryRouter = require('./routes/categoryRoutes')
 const ProductRouter = require('./routes/productRoutes')
+const CartRouter = require('./routes/cartRoutes')
 
 app.use(morgan('dev'))
 app.use(cors())
@@ -33,6 +34,8 @@ app.use(cookieParser())
 app.use('/api/user',UserRouter)
 app.use('/api/category',CategoryRouter)
 app.use('/api/product',ProductRouter)
+app.use('/api/cart',CartRouter)
+
 
 
 app.use(notFound)

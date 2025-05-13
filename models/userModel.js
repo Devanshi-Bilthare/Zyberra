@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -23,15 +24,15 @@ const UserSchema = new mongoose.Schema({
     type:String,
     default:'User'
   },
-  cart:{
+  cart:[{
     type:mongoose.Schema.Types.ObjectId,
     ref : 'Product'
-  },
+  }],
 
-  wishList:{
+  wishList:[{
     type:mongoose.Schema.Types.ObjectId,
     ref : 'Product'
-  },
+  }],
 
   ordered:{
     type:mongoose.Schema.Types.ObjectId,
@@ -46,6 +47,22 @@ resetTokenExpiry: {
 },
 
 },{timestamps:true})
+
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 const UserModel = mongoose.model('User',UserSchema)
 
