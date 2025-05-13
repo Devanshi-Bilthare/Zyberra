@@ -13,6 +13,7 @@ const morgan = require('morgan')
 const { notFound, errorHandler } = require('./middlewares/errorHandler')
 
 const UserRouter  =require('./routes/userRoutes')
+const CategoryRouter = require('./routes/categoryRoutes')
 
 app.use(morgan('dev'))
 app.use(cors())
@@ -23,6 +24,7 @@ app.use(cookieParser())
 
 
 app.use('/api/user',UserRouter)
+app.use('/api/category',CategoryRouter)
 
 app.use(notFound)
 app.use(errorHandler)

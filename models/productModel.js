@@ -19,9 +19,9 @@ const ProductSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Category'
     },
-    image:{
+    images:[{
         type:String
-    }
+    }]
 })
 
 const ProductModel = mongoose.model('Product',ProductSchema)
