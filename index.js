@@ -17,6 +17,7 @@ const UserRouter  =require('./routes/userRoutes')
 const CategoryRouter = require('./routes/categoryRoutes')
 const ProductRouter = require('./routes/productRoutes')
 const CartRouter = require('./routes/cartRoutes')
+const WishListRouter = require('./routes/wishListRoutes')
 
 app.use(morgan('dev'))
 app.use(cors())
@@ -35,6 +36,8 @@ app.use('/api/user',UserRouter)
 app.use('/api/category',CategoryRouter)
 app.use('/api/product',ProductRouter)
 app.use('/api/cart',CartRouter)
+app.use('/api/wishlist',WishListRouter)
+
 
 
 

@@ -8,7 +8,7 @@ router.post('/add',protect,AddToCart)
 
 router.get('/all',protect,GetCartItems)
 
-router.post('/remove',protect,RemoveFromCart)
+router.delete('/remove',protect,RemoveFromCart)
 
 router.put('/empty',protect,EmptyCart)
 
