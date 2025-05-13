@@ -1,10 +1,16 @@
 const mongoose = require('mongoose')
 
+const ImageSchema = new mongoose.Schema({
+    url: String,
+    fileId: String,
+});
+
+
 const ProductSchema = new mongoose.Schema({
     name:{
         type:String,
     },
-    Quantity:{
+    quantity:{
         type:Number,
         default:0
     },
@@ -19,9 +25,7 @@ const ProductSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Category'
     },
-    images:[{
-        type:String
-    }]
+    images:[ImageSchema]
 })
 
 const ProductModel = mongoose.model('Product',ProductSchema)

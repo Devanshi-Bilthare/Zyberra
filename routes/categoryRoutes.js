@@ -3,7 +3,7 @@ const { AddCategory, EditCategory, AllCategory, DeleteCategory, GetProductByCate
 
 const router = express.Router()
 
-router.post('/add-category',AddCategory)
+router.post('/add',AddCategory)
 
 router.get('/all',AllCategory)
 

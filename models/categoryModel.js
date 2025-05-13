@@ -4,10 +4,10 @@ const CategorySchema = new mongoose.Schema({
     name:{
         type:String
     },
-    products:{
+    products:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Product'
-    }
+    }]
 })
 
 const CategoryModel = mongoose.model('Category',CategorySchema)
