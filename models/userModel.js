@@ -24,10 +24,19 @@ const UserSchema = new mongoose.Schema({
     type:String,
     default:'User'
   },
-  cart:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref : 'Product'
-  }],
+  cart: [
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product"
+    },
+    quantity: {
+      type: Number,
+      default: 1
+    }
+  }
+]
+,
 
   wishList:[{
     type:mongoose.Schema.Types.ObjectId,

@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const CategoryModel = require('../models/categoryModel');
+const ProductModel = require('../models/productModel');
 
 
 const AddCategory = asyncHandler(async (req,res)=>{
@@ -26,7 +27,6 @@ const AllCategory = asyncHandler(async (req,res)=>{
 const EditCategory = asyncHandler(async (req,res)=>{
     try{
         const {id} = req.params
-
         const updatdeCategory = await CategoryModel.findByIdAndUpdate(id,req.body)
 
         res.status(201).json(updatdeCategory)
@@ -36,18 +36,33 @@ const EditCategory = asyncHandler(async (req,res)=>{
     }
 })
 
-const DeleteCategory = asyncHandler(async (req,res)=>{
-    try{
-        const {id} = req.params
 
-        const deleteCategory = await CategoryModel.findByIdAndDelete(id)
+const DeleteCategory = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
 
-        res.status(201).json(deleteCategory)
+    // Delete all products with this category
+    await ProductModel.deleteMany({ category: id });
 
-    }catch(err){
-        res.status(500).json({message:'Error in editing Category',error:err.message})
+    // Then delete the category
+    const deletedCategory = await CategoryModel.findByIdAndDelete(id);
+
+    if (!deletedCategory) {
+      return res.status(404).json({ message: 'Category not found' });
     }
-})
+
+    res.status(200).json({
+      message: 'Category and its products deleted successfully',
+      deletedCategory,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error deleting category and its products',
+      error: err.message,
+    });
+  }
+});
+
 
 const GetProductByCategory = asyncHandler(async(req,res)=>{
     try{

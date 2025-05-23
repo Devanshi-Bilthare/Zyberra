@@ -8,7 +8,7 @@ router.post('/add',protect,AddToWishList)
 
 router.get('/all',protect,GetWIshListItems)
 
-router.delete('/remove',protect,RemoveFromWishList)
+router.put('/remove',protect,RemoveFromWishList)
 
 router.put('/empty',protect,EmptyWishList)
 

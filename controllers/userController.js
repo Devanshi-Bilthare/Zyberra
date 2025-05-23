@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const Register = asyncHandler(async (req,res)=>{
     try{
         const newUser = await UserModel.create(req.body)
+
         const token = jwt.sign({id:newUser._id},process.env.JWT_SECRET,{expiresIn:'3d'})
 
         res.status(201).json({newUser,token})
@@ -63,7 +64,7 @@ const ForgotPassword = asyncHandler(async (req, res) => {
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = Date.now() + 1000 * 60 * 60; 
+    const resetTokenExpiry = Date.now() + 5 * 60 * 1000;
 
     user.resetToken = resetToken;
     user.resetTokenExpiry = resetTokenExpiry;
@@ -77,16 +78,34 @@ const ForgotPassword = asyncHandler(async (req, res) => {
         },
     });
 
-    const resetUrl = `http://yourfrontend.com/reset-password/${resetToken}`;
+    console.log(resetToken)
+
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"ZYBERRA Support" <${process.env.EMAIL_USER}>`,
         to: user.email,
-        subject: 'Password Reset Request',
-        html: `<p>Hello ${user.name || ''},</p>
-               <p>Click the link below to reset your password:</p>
-               <a href="${resetUrl}">${resetUrl}</a>
-               <p>This link will expire in 1 hour.</p>`,
+        subject: "Reset Your ZYBERRA Account Password",
+        html: `
+            <p>Dear ${user.name || "User"},</p>
+
+            <p>We received a request to reset the password for your ZYBERRA account associated with this email address.</p>
+
+            <p>If you made this request, please click the link below to reset your password. This link is valid for only <strong>5 minutes</strong> and can only be used once:</p>
+
+            <p><a href="${resetUrl}" target="_blank" style="color: #1a73e8;">Reset Your Password</a></p>
+
+            <p>If you did not request a password reset, please ignore this message. Your account remains safe and secure.</p>
+
+            <p>For security reasons, do not share this email or link with anyone.</p>
+
+            <br/>
+
+            <p>Warm regards,</p>
+            <p><strong>ZYBERRA Support Team</strong></p>
+            <hr />
+            <small>This is an automated message. Please do not reply to this email.</small>
+        `,
     };
 
     await transporter.sendMail(mailOptions);

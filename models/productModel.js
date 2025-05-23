@@ -25,7 +25,11 @@ const ProductSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Category'
     },
-    images:[ImageSchema]
+    images:[ImageSchema],
+    banner:{
+        type:Boolean,
+        default:false
+    }
 })
 
 const ProductModel = mongoose.model('Product',ProductSchema)

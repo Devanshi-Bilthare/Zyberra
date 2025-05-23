@@ -6,7 +6,7 @@ const CategoryModel = require('../models/categoryModel');
 
 const AddProduct = asyncHandler(async (req, res) => {
     try {
-        const { name, quantity, price, description, category } = req.body;
+        const { name, quantity, price, description, category,banner } = req.body;
 
         if (!name || !price || !category) {
             return res.status(400).json({ message: 'Name, price, and category are required' });
@@ -41,6 +41,7 @@ const AddProduct = asyncHandler(async (req, res) => {
             description,
             category,
             images: imageUrls,
+            banner
         });
 
         await CategoryModel.findByIdAndUpdate(category, {
@@ -85,10 +86,11 @@ const EditProduct = asyncHandler(async (req, res) => {
         if (!existingProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
-
         let updatedImages = existingProduct.images;
 
+        // If new images uploaded, replace old ones
         if (req.files && req.files.images) {
+            // Delete old images from ImageKit
             const deletePromises = existingProduct.images.map(img =>
                 imagekit.deleteFile(img.fileId)
             );
@@ -112,6 +114,10 @@ const EditProduct = asyncHandler(async (req, res) => {
             }
         }
 
+        const oldCategoryId = existingProduct.category?.toString();
+        const newCategoryId = req.body.category;
+
+        // Update product with new data and images
         const updatedProduct = await ProductModel.findByIdAndUpdate(
             id,
             {
@@ -121,11 +127,25 @@ const EditProduct = asyncHandler(async (req, res) => {
             { new: true }
         );
 
+        // Handle category change
+        if (newCategoryId && oldCategoryId !== newCategoryId) {
+            if (oldCategoryId) {
+                await CategoryModel.findByIdAndUpdate(oldCategoryId, {
+                    $pull: { products: id }
+                });
+            }
+
+            await CategoryModel.findByIdAndUpdate(newCategoryId, {
+                $addToSet: { products: id }
+            });
+        }
+
         res.status(200).json(updatedProduct);
     } catch (err) {
         res.status(500).json({ message: 'Error updating product', error: err.message });
     }
 });
+
 
 
 
