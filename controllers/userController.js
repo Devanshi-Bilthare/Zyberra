@@ -136,4 +136,13 @@ const ResetPassword = asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Password reset successful' });
 });
 
-module.exports= {Register, Login,ForgotPassword, ResetPassword}
+const GetAllUsers = asyncHandler(async (req, res) => {
+    try {
+        const users = await UserModel.find();
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching users', error: err.message });
+    }
+});
+
+module.exports= {Register, Login,ForgotPassword, ResetPassword,GetAllUsers}

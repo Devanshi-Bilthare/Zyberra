@@ -43,11 +43,6 @@ const UserSchema = new mongoose.Schema({
     ref : 'Product'
   }],
 
-  ordered:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref : 'Product'
-  },
-
   resetToken: {
     type: String,
 },

@@ -95,4 +95,40 @@ const verifyPayment = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Payment verified successfully', order });
 });
 
-module.exports = {createOrder,verifyPayment}
+const allOrders = asyncHandler(async (req,res) => {
+  try{
+    const allOrders = await OrderModel.find().populate('user')
+
+    return res.status(200).json(allOrders)
+  }catch(err){
+    res.status(500).json({message : "Error fetching orders", error:err.message})
+  }
+})
+
+const getStats = asyncHandler(async (req, res) => {
+  try {
+    const totalUsers = await UserModel.countDocuments();
+    const totalOrders = await OrderModel.countDocuments();
+    const totalProducts = await ProductModel.countDocuments();
+
+    // Calculate total sales from all 'paid' orders
+    const paidOrders = await OrderModel.find({ status: 'paid' });
+    const totalSales = paidOrders.reduce((sum, order) => sum + order.amount, 0);
+
+    res.status(200).json({
+      totalUsers,
+      totalOrders,
+      totalProducts,
+      totalSales,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error fetching dashboard stats',
+      error: err.message,
+    });
+  }
+});
+
+
+
+module.exports = {createOrder,verifyPayment,allOrders,getStats}
