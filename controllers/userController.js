@@ -80,7 +80,7 @@ const ForgotPassword = asyncHandler(async (req, res) => {
 
     console.log(resetToken)
 
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetUrl = `https://zyberra-frontend.vercel.app/reset-password/${resetToken}`;
 
     const mailOptions = {
         from: `"ZYBERRA Support" <${process.env.EMAIL_USER}>`,
