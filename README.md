@@ -28,17 +28,13 @@ Before running the backend, make sure you have:
 git clone <your-backend-repo-url>
 cd zyberra-backend
 2. Install Dependencies
-bash
-Copy
-Edit
+
 npm install
 3. Set Up Environment Variables
 Create a .env file in the root directory and add the following variables:
 
 env
-Copy
-Edit
-PORT=5000
+PORT=4000
 MONGO_URI=<your-mongodb-uri>
 JWT_SECRET=<your-jwt-secret>
 IMAGEKIT_PUBLIC_KEY=<your-imagekit-public-key>
@@ -47,11 +43,9 @@ IMAGEKIT_URL_ENDPOINT=<your-imagekit-url-endpoint>
 💡 Replace the placeholder values with your actual credentials.
 
 4. Start the Server
-bash
-Copy
-Edit
+
 npm run dev
-The backend server will start on: http://localhost:5000.
+The backend server will start on: http://localhost:4000.
 
 Scripts
 npm run dev – start server in development with nodemon
